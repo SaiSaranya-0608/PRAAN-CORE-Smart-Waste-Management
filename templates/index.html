@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praan Core - Authentication</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="screen-view active">
+        <!-- Main Auth Menu -->
+        <div class="login-container glass-panel" id="auth-main">
+            <h1 class="logo-text text-center">PRAAN CORE</h1>
+            <p class="version-text text-center" style="margin-bottom: 2rem;">Select Access Portal</p>
+            
+            <div class="auth-buttons" style="display: flex; flex-direction: column; gap: 1rem;">
+                <button class="btn btn-primary" id="nav-admin-login" style="justify-content: center;">Admin Portal</button>
+                <button class="btn btn-secondary" id="nav-user-login" style="justify-content: center;">Citizen Portal</button>
+            </div>
+        </div>
+
+        <!-- Admin Auth -->
+        <div class="login-container glass-panel" id="auth-admin" style="display:none;">
+            <h1 class="logo-text text-center">ADMIN PORTAL</h1>
+            <p class="version-text text-center" style="margin-bottom: 2rem;">Secure Authentication</p>
+            
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="admin-username" class="form-control" placeholder="Admin username">
+            </div>
+            <div class="form-group">
+                <label>Passkey</label>
+                <input type="password" id="admin-password" class="form-control" placeholder="Admin passkey">
+            </div>
+            
+            <div class="auth-buttons" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+                <button id="btn-login-admin" class="btn btn-primary" style="justify-content: center;">Login</button>
+                <button class="btn btn-secondary nav-auth-back" style="justify-content: center; font-size: 0.8rem;">Back to Main</button>
+            </div>
+        </div>
+
+        <!-- Citizen Auth -->
+        <div class="login-container glass-panel" id="auth-user" style="display:none;">
+            <h1 class="logo-text text-center">CITIZEN PORTAL</h1>
+            <p class="version-text text-center" style="margin-bottom: 2rem;">Login or Register</p>
+            
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="user-username" class="form-control" placeholder="Citizen username">
+            </div>
+            <div class="form-group">
+                <label>Passkey</label>
+                <input type="password" id="user-password" class="form-control" placeholder="Citizen passkey">
+            </div>
+            
+            <div class="auth-buttons" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+                <button id="btn-login-user" class="btn btn-primary" style="justify-content: center;">Login</button>
+                <button id="btn-register-user" class="btn btn-success" style="justify-content: center;">Sign Up</button>
+                <button class="btn btn-secondary nav-auth-back" style="justify-content: center; font-size: 0.8rem;">Back to Main</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN PORTAL -->
+    <div id="admin-portal" class="screen-view app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <h1 class="logo-text">PRAAN ADMIN</h1>
+                <p class="version-text" id="sys-version-text">v6.2.0-ULTIMATE</p>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-target="view-dashboard">
+                    <span class="nav-icon">📊</span> Dashboard
+                </a>
+                <a href="#" class="nav-item" data-target="view-bins">
+                    <span class="nav-icon">🗑️</span> Bins & Waste
+                </a>
+                <a href="#" class="nav-item" data-target="view-dispatch">
+                    <span class="nav-icon">🚀</span> Dispatch Center
+                </a>
+                <a href="#" class="nav-item" data-target="view-fleet">
+                    <span class="nav-icon">🚛</span> Fleet Logistics
+                </a>
+                <a href="#" class="nav-item" data-target="view-facilities">
+                    <span class="nav-icon">🏭</span> Processing Facilities
+                </a>
+                <a href="#" class="nav-item" data-target="view-weather">
+                    <span class="nav-icon">🌤️</span> Environment & Settings
+                </a>
+                <a href="#" class="nav-item" data-target="view-users">
+                    <span class="nav-icon">👥</span> Admin Users
+                </a>
+            </nav>
+            <div style="margin-top: auto; padding: 1.5rem;">
+                <button class="btn btn-secondary btn-logout" style="width:100%; justify-content:center;">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <h2 id="header-title">Admin Command Center</h2>
+                <div class="user-profile">
+                    <span class="status-indicator online"></span>
+                    <span class="display-username">System Administrator</span>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <!-- DASHBOARD VIEW -->
+                <div id="view-dashboard" class="view-section active">
+                    <div class="section-header">
+                        <h3>Generation Performance Report</h3>
+                        <button id="btn-clear-logs" class="btn btn-danger">Clear Security Logs</button>
+                    </div>
+                    
+                    <div class="stats-cards">
+                        <div class="glass-panel stat-card">
+                            <div class="stat-title">Treasury Balance</div>
+                            <div class="stat-value text-success" id="stat-treasury">₹0</div>
+                        </div>
+                        <div class="glass-panel stat-card">
+                            <div class="stat-title">Net Profit</div>
+                            <div class="stat-value text-success" id="stat-profit">₹0</div>
+                        </div>
+                        <div class="glass-panel stat-card">
+                            <div class="stat-title">Total Waste</div>
+                            <div class="stat-value" id="stat-total-waste">0 kg</div>
+                        </div>
+                        <div class="glass-panel stat-card">
+                            <div class="stat-title">Active Bins</div>
+                            <div class="stat-value text-warning" id="stat-active-bins">0/0</div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel dashboard-logs">
+                        <h4>Recent System Logs</h4>
+                        <ul id="session-logs-list" class="log-list"></ul>
+                    </div>
+                </div>
+
+                <!-- BINS & WASTE VIEW -->
+                <div id="view-bins" class="view-section">
+                    <div class="section-header">
+                        <h3>Live Bin Monitor</h3>
+                        <button class="btn btn-primary" id="btn-open-inject">Inject Waste Record</button>
+                    </div>
+                    <div class="glass-panel table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Bin ID</th>
+                                    <th>Area</th>
+                                    <th>Source</th>
+                                    <th>Load</th>
+                                    <th>Overflow</th>
+                                    <th>Contaminated</th>
+                                    <th>Vehicle</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bins-table-body">
+                                <tr><td colspan="7">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- DISPATCH CENTER VIEW -->
+                <div id="view-dispatch" class="view-section">
+                    <div class="section-header">
+                        <h3>Dispatch Operations</h3>
+                    </div>
+                    <div class="dispatch-actions">
+                        <div class="glass-panel action-card">
+                            <h4>Priority Clear</h4>
+                            <p>Clear the single most critical bin immediately.</p>
+                            <button id="btn-priority-clear" class="btn btn-warning">Execute Priority Clear</button>
+                        </div>
+                        <div class="glass-panel action-card">
+                            <h4>Single Bin Clearance</h4>
+                            <p>Clear a specific bin manually.</p>
+                            <div class="input-group" style="margin-bottom: 0.5rem;">
+                                <select id="single-bin-area-select" class="form-control">
+                                    <option value="">Select Area...</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <select id="single-bin-select" class="form-control">
+                                    <option value="">Select Bin...</option>
+                                </select>
+                                <button id="btn-single-bin-clear" class="btn btn-warning">Clear Bin</button>
+                            </div>
+                        </div>
+                        <div class="glass-panel action-card">
+                            <h4>Manual Zone Clearance</h4>
+                            <p>Clear all active bins within a specific zone.</p>
+                            <div class="input-group" style="margin-bottom: 0.5rem;">
+                                <select id="zone-mode-select" class="form-control">
+                                    <option value="standard">Standard (Same Vehicle)</option>
+                                    <option value="different_vehicles">Different Vehicles per Bin</option>
+                                    <option value="reroute">Force Reroute</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <select id="zone-select" class="form-control"></select>
+                                <button id="btn-zone-clear" class="btn btn-primary">Clear Zone</button>
+                            </div>
+                        </div>
+                        <div class="glass-panel action-card">
+                            <h4>Full City Sweep</h4>
+                            <p>Initiate collection routine for all areas in the city.</p>
+                            <div class="input-group" style="margin-bottom: 0.5rem;">
+                                <select id="sweep-mode-select" class="form-control">
+                                    <option value="standard">Standard Sweep</option>
+                                    <option value="reroute">Sweep with Force Reroute</option>
+                                </select>
+                            </div>
+                            <button id="btn-full-sweep" class="btn btn-primary" style="width: 100%;">Start City Sweep</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FLEET LOGISTICS VIEW -->
+                <div id="view-fleet" class="view-section">
+                    <div class="section-header">
+                        <h3>Vehicle Status Dashboard</h3>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="app.postFleetAction('refuel')">Refuel All</button>
+                            <button class="btn btn-primary" onclick="app.postFleetAction('service')">Service Fleet</button>
+                            <button class="btn btn-danger" onclick="app.postFleetAction('repair')">Repair Broken</button>
+                        </div>
+                    </div>
+                    <div class="glass-panel table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Type</th>
+                                    <th>Area</th>
+                                    <th>Fuel</th>
+                                    <th>Health</th>
+                                    <th>Broken</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fleet-table-body">
+                                <tr><td colspan="7">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PROCESSING FACILITIES VIEW -->
+                <div id="view-facilities" class="view-section">
+                    <div class="section-header">
+                        <h3>Processing Facilities</h3>
+                        <button id="clear-all-btn" class="btn btn-danger">Clear All Plants</button>
+                    </div>
+                    <div class="facilities-grid" id="facilities-container">
+                        <div class="loading-spinner">Loading facilities...</div>
+                    </div>
+                </div>
+
+                <!-- SETTINGS & WEATHER VIEW -->
+                <div id="view-weather" class="view-section">
+                    <div class="section-header">
+                        <h3>Environment & System Settings</h3>
+                        <button id="btn-toggle-weather" class="btn btn-primary">Toggle Weather Mode</button>
+                    </div>
+
+
+                    <div class="glass-panel table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Area</th>
+                                    <th>Condition</th>
+                                    <th>Rain (mm)</th>
+                                    <th>Wind (km/h)</th>
+                                    <th>Temp (°C)</th>
+                                    <th>Traffic</th>
+                                    <th>Road</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weather-table-body">
+                                <tr><td colspan="7">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ADMIN USERS VIEW -->
+                <div id="view-users" class="view-section">
+                    <div class="section-header">
+                        <h3>Admin Management</h3>
+                    </div>
+                    <div class="glass-panel" style="padding: 1.5rem; max-width: 600px;">
+                        <h4>Add New Administrator</h4>
+                        <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+                            <input type="text" id="new-admin-user" class="form-control" placeholder="New Admin Username">
+                            <input type="password" id="new-admin-pass" class="form-control" placeholder="Passkey">
+                            <button id="btn-add-admin" class="btn btn-success" style="justify-content: center;">Register Admin</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- USER PORTAL -->
+    <div id="user-portal" class="screen-view app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <h1 class="logo-text">PRAAN USER</h1>
+                <p class="version-text">Citizen Portal</p>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-target="view-user-dashboard">
+                    <span class="nav-icon">🏠</span> Home
+                </a>
+            </nav>
+            <div style="margin-top: auto; padding: 1.5rem;">
+                <button class="btn btn-secondary btn-logout" style="width:100%; justify-content:center;">Logout</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <h2>Citizen Dashboard</h2>
+                <div class="user-profile">
+                    <span class="status-indicator online"></span>
+                    <span class="display-username">Citizen</span>
+                </div>
+            </header>
+            
+            <div class="content-area">
+                <div id="view-user-dashboard" class="view-section active">
+                    <div class="stats-cards">
+                        <div class="glass-panel stat-card" style="border-left: 4px solid var(--accent-red);">
+                            <div class="stat-title">Outstanding Penalty</div>
+                            <div class="stat-value text-danger" id="user-penalty-amount">₹0</div>
+                            <button id="btn-user-pay" class="btn btn-danger" style="margin-top:1rem; display:none;">Pay Now</button>
+                        </div>
+                    </div>
+
+                    <div class="section-header" style="margin-top: 3rem;">
+                        <h3>Simulate Waste Generation (Injection)</h3>
+                        <button class="btn btn-primary" id="btn-user-inject-open">Inject Waste</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Inject Waste Modal -->
+    <div class="modal-overlay" id="inject-modal">
+        <div class="modal-content glass-panel">
+            <h3>Inject Waste Record</h3>
+            <div class="form-group">
+                <label>Target Area</label>
+                <select id="inject-area" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label>Bin ID</label>
+                <select id="inject-bin" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label>Waste Type <span id="inject-allowed-info" style="font-size: 0.75rem; color: var(--accent-yellow); margin-left: 0.5rem;"></span></label>
+                <input type="text" id="inject-wtype" class="form-control" placeholder="e.g. PLASTIC, ORGANIC">
+            </div>
+            <div class="form-group">
+                <label>Quantity (kg)</label>
+                <input type="number" id="inject-qty" class="form-control" value="10">
+            </div>
+            <div class="modal-actions" style="margin-top: 1rem;">
+                <button class="btn btn-secondary" onclick="document.getElementById('inject-modal').classList.remove('active')">Cancel</button>
+                <button class="btn btn-primary" id="btn-submit-inject">Inject Waste</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warning / Alert Modal (Contamination & Overfill) -->
+    <div class="modal-overlay" id="warning-modal">
+        <div class="modal-content glass-panel" style="border: 2px solid var(--accent-red); box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);">
+            <h3 class="text-danger" style="display:flex; align-items:center; gap:0.5rem;">
+                ⚠️ CRITICAL SYSTEM ALERT
+            </h3>
+            <div id="warning-messages-container" style="margin-bottom: 1.5rem; color: var(--text-primary); font-size: 1.1rem; line-height: 1.6;">
+                <!-- Warnings go here -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-danger" onclick="document.getElementById('warning-modal').classList.remove('active')">Acknowledge</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Clear Modal -->
+    <div class="modal-overlay" id="clear-modal">
+        <div class="modal-content glass-panel">
+            <h3>Clear Facility</h3>
+            <p>Are you sure you want to reset the load for <strong id="modal-facility-name"></strong>?</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancel-clear">Cancel</button>
+                <button class="btn btn-danger" id="confirm-clear">Confirm Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
